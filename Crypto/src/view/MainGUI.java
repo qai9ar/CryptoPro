@@ -4,11 +4,16 @@ import common.CryptoFactory;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class MainGUI extends JFrame {
+public class MainGUI extends JFrame implements ActionListener {
 
-    private CryptoFactory cryptofactory;
+    public CryptoFactory cryptofactory;
 
+    private JMenuBar menu_bar;
+    private JMenu key_menu;
+    private JMenuItem open_key, save_key;
     private JPanel encrypt_panel, decrypt_panel, encrypt_panel_btn, decrypt_panel_btn;
     private JLabel label_encrypted, label_decrypted, label_toEncrypt, label_toDecrypt;
     private JTextField field_encrypted, field_decrypted, field_toEncrypt, field_toDecrypt;
@@ -21,6 +26,14 @@ public class MainGUI extends JFrame {
     }
     private void createAndShowGUI() {
 
+        menu_bar = new JMenuBar();
+        key_menu = new JMenu("Keys");
+        open_key = new JMenuItem("Open Saved Key");
+        save_key = new JMenuItem("Save Current Key");
+        key_menu.add(open_key);
+        key_menu.add(save_key);
+        menu_bar.add(key_menu);
+
         encrypt_panel = new JPanel();
         decrypt_panel = new JPanel();
         encrypt_panel_btn = new JPanel();
@@ -31,14 +44,14 @@ public class MainGUI extends JFrame {
         label_toEncrypt = new JLabel("Plain data:");
         label_toDecrypt = new JLabel("Cipher data:");
 
-        field_encrypted = new JTextField(15);
-        field_decrypted = new JTextField(15);
-        field_toEncrypt = new JTextField(15);
-        field_toDecrypt = new JTextField(15);
+        field_encrypted = new JTextField(20);
+        field_decrypted = new JTextField(20);
+        field_toEncrypt = new JTextField(20);
+        field_toDecrypt = new JTextField(20);
         field_encrypted.setEditable(false);
+        field_encrypted.setBorder(null);
         field_decrypted.setEditable(false);
-        field_encrypted.setText("Try to copy");
-        field_decrypted.setText("Try to copy");
+        field_decrypted.setBorder(null);
 
         btn_encrypt = new JButton("Encrypt");
         btn_decrypt = new JButton("Decrypt");
@@ -47,6 +60,13 @@ public class MainGUI extends JFrame {
         setupEncryptLayoutWithBtn();
         setupDecryptLayoutWithBtn();
 
+        this.btn_encrypt.addActionListener(this);
+        this.btn_decrypt.addActionListener(this);
+        this.open_key.addActionListener(this);
+        this.save_key.addActionListener(this);
+
+        this.setJMenuBar(menu_bar);
+        this.setResizable(false);
         this.pack();
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(3);
@@ -146,5 +166,35 @@ public class MainGUI extends JFrame {
                 GL.createSequentialGroup().addComponent(decrypt_panel).addComponent(btn_decrypt)
         );
         GL.linkSize(SwingConstants.HORIZONTAL, btn_decrypt, decrypt_panel);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == btn_encrypt) {
+            this.cryptofactory.startEncryptProcess();
+        }
+        else if (e.getSource() == btn_decrypt) {
+            this.cryptofactory.startDecryptProcess();
+        }
+        else if (e.getSource() == open_key) {
+            String value = JOptionPane.showInputDialog(null, "Input Filename");
+            cryptofactory.retrieveSecretKey(value);
+        }
+        else if (e.getSource() == save_key) {
+            String value = JOptionPane.showInputDialog(null, "Input Filename");
+            cryptofactory.saveSecretKey(value);
+        }
+    }
+    public String getPlainData() {
+        return this.field_toEncrypt.getText();
+    }
+    public String getCipherData() {
+        return this.field_toDecrypt.getText();
+    }
+    public void setCipherData(String cipherData) {
+        this.field_encrypted.setText(cipherData);
+    }
+    public void setPlainData(String plainData) {
+        this.field_decrypted.setText(plainData);
     }
 }
