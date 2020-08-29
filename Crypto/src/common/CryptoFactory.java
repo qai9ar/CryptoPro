@@ -72,7 +72,7 @@ public class CryptoFactory {
             secretKey = kg.generateKey();
         }
         catch (Exception e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "[ ERROR GENERATING KEY ]", "ERROR", JOptionPane.ERROR_MESSAGE);
         }
         return secretKey;
     }
@@ -90,7 +90,7 @@ public class CryptoFactory {
                 this.secretKey = this.secretKeyFactory.secretKey;
             }
             catch (Exception e) {
-                e.printStackTrace();
+                JOptionPane.showMessageDialog(null, "[ ERROR ]", "ERROR", JOptionPane.ERROR_MESSAGE);
             }
         }
         else {
@@ -116,7 +116,7 @@ public class CryptoFactory {
             JOptionPane.showMessageDialog(null, "[ SUCCESSFULLY SAVE KEY ] With The Filename: " + filename + ".ser", "Info", JOptionPane.DEFAULT_OPTION);
         }
         catch (Exception e) {
-            System.out.println(e.toString());
+            JOptionPane.showMessageDialog(null, "[ ERROR ]", "ERROR", JOptionPane.ERROR_MESSAGE);
         }
     }
     private boolean inputCheck(int mode) {
